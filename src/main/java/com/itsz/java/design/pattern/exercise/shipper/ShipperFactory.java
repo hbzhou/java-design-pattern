@@ -1,7 +1,21 @@
 package com.itsz.java.design.pattern.exercise.shipper;
 
-public interface ShipperFactory<Shipper> {
+import java.util.Arrays;
+import java.util.List;
 
-    Shipper create(String name, String base);
+public class ShipperFactory {
+
+    private static final List<Shipper> shippers = Arrays.asList(
+            new PacificParcelShipper(),
+            new ChicagoSprintShipper(),
+            new AirEastShipper()
+    );
+
+    public static Shipper getShipper(String fromZipCode) {
+        return shippers.stream()
+                .filter(shipper -> shipper.supports(fromZipCode))
+                .findFirst()
+                .orElse(new AirEastShipper());
+    }
 
 }

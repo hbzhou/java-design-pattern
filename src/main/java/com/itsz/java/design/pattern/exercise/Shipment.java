@@ -1,38 +1,39 @@
 package com.itsz.java.design.pattern.exercise;
 
 import com.itsz.java.design.pattern.exercise.shipper.ItemType;
+import com.itsz.java.design.pattern.exercise.shipper.ShipperFactory;
+import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Data
+@Builder
 public class Shipment {
-    private String shipmentId = UUID.randomUUID().toString();
+    private String shipmentId;
     private String toAddress;
     private String fromAddress;
     private String toZipCode;
     private String fromZipCode;
     private ItemType itemType;
     private BigDecimal weight;
-    private List<String> marks = new ArrayList<>();
-
-    public Shipment() {
-    }
-
-    public Shipment(String toAddress, String fromAddress, String toZipCode, String fromZipCode, ItemType itemType, BigDecimal weight, List<String> marks) {
-        this.toAddress = toAddress;
-        this.fromAddress = fromAddress;
-        this.toZipCode = toZipCode;
-        this.fromZipCode = fromZipCode;
-        this.itemType = itemType;
-        this.weight = weight;
-        this.marks = marks;
-    }
+    private List<Mark> marks;
 
     public String ship(){
+        BigDecimal cost = ShipperFactory.getShipper(this.fromZipCode).getCost(this.itemType, this.weight);
+        StringBuilder builder = new StringBuilder();
+        builder.append("Shipment with the ID ").append(this.shipmentId);
+        builder.append(" will be picked up from ").append(this.fromZipCode).append(" ").append(this.fromAddress);
+        builder.append(" and shipped to ").append(this.toZipCode).append(" ").append(this.toAddress).append(".");
+        builder.append("\n");
+        builder.append("Cost = ").append(cost).append(".");
+        builder.append("\n");
+        for (Mark mark : this.marks) {
+            builder.append(mark.getDescription());
+            builder.append("\n");
+        }
+        System.out.println(builder.toString());
         return this.shipmentId;
     }
 }

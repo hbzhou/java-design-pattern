@@ -2,6 +2,7 @@ package com.itsz.java.design.pattern.exercise.shipper;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.UnaryOperator;
 
@@ -11,8 +12,9 @@ public class PacificParcelShipper extends AbstractShipper {
 
     private Map<ItemType, UnaryOperator<BigDecimal>> costCalculators;
 
-    public PacificParcelShipper(String name, String base) {
-        super(name, base);
+    public PacificParcelShipper() {
+        super("Pacific Parcel", "Based in San Diego");
+        costCalculators = new HashMap<>();
         costCalculators.put(ItemType.LETTER, weight -> weight.multiply(new BigDecimal("0.51")));
         costCalculators.put(ItemType.PACKAGE, weight -> weight.multiply(new BigDecimal("0.19")));
         costCalculators.put(ItemType.OVER_SIZED, weight -> weight.multiply(new BigDecimal("0.21")));
@@ -24,7 +26,7 @@ public class PacificParcelShipper extends AbstractShipper {
     }
 
     @Override
-    public BigDecimal getCost() {
-        return new BigDecimal("0.51");
+    public BigDecimal getCost(ItemType itemType, BigDecimal weight) {
+        return costCalculators.get(itemType).apply(weight);
     }
 }

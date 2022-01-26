@@ -6,6 +6,6 @@ public interface Shipper {
 
     boolean supports (String fromZipCode);
 
-    BigDecimal getCost();
+    BigDecimal getCost(ItemType itemType, BigDecimal weight);
 
 }
